@@ -1,14 +1,12 @@
 package main.springbook.user.dao;
 
-import main.springbook.ConnectionConst;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
 import static main.springbook.ConnectionConst.*;
 
-public class DUserDao implements ConnectionMaker{
+public class DConnectionMaker implements ConnectionMaker{
 
     @Override
     public Connection makeConnection() throws ClassNotFoundException, SQLException {
