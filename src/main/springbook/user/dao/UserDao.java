@@ -8,14 +8,12 @@ import static main.springbook.ConnectionConst.*;
 public class UserDao {
 
     /**
-     * DB연결 코드가 DB에 접근하는 모든 메서드에 공통적으로 포함돼있음
-     * DAO 메서드가 추가될 때마다 중복이 또 발생하고 연결하는 DB가 바뀐다면 하나하나 모두 바꿔줘야 한다.
+     * 커넥션 접근 코드를 메서드로 추출
      */
+
     public void add(User user) throws ClassNotFoundException, SQLException {
         //관심사 1. DB연결
-        Class.forName("com.mysql.jdbc.Driver");
-        Connection c = DriverManager.getConnection(URL, USERNAME,
-                PASSWORD);
+        Connection c = getConnection();
 
         //관심사 2. SQL 쿼리문 작성
         PreparedStatement ps = c.prepareStatement(
@@ -32,9 +30,10 @@ public class UserDao {
     }
 
 
+
+
     public User get(String id) throws ClassNotFoundException, SQLException {
-        Class.forName("com.mysql.jdbc.Driver");
-        Connection c = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+        Connection c = getConnection();
         PreparedStatement ps = c
                 .prepareStatement("select * from users where id = ?");
         ps.setString(1, id);
@@ -53,6 +52,10 @@ public class UserDao {
         return user;
     }
 
+    /**
+     * 간단하지만 위험한 테스트 코드 ( DB의 데이터를 직접 삭제하지 않으면 두 번째 부터는 예외가 발생 )
+     * id가 하드코딩 되어있다.
+     */
     public static void main(String[] args) throws ClassNotFoundException, SQLException {
         UserDao dao = new UserDao();
 
@@ -70,6 +73,15 @@ public class UserDao {
         System.out.println(user2.getPassword());
 
         System.out.println(user2.getId() + " 조회 성공");
+    }
+
+    /**
+     * 여러 메서드에 중복되어서 나타나는 특정 관심사항이 담긴 코드를 분리함. (Refactoring : extract method)
+     */
+    private Connection getConnection() throws ClassNotFoundException, SQLException {
+        Class.forName("com.mysql.jdbc.Driver");
+        Connection c = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+        return c;
     }
 
 }
