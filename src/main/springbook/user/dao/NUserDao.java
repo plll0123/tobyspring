@@ -8,11 +8,10 @@ import java.sql.SQLException;
 
 import static main.springbook.ConnectionConst.*;
 
-public class NUserDao extends UserDao {
+public class NUserDao implements ConnectionMaker{
 
-    // 커넥션을 가져오는 코드를 상속을 통해 확장
     @Override
-    public Connection getConnection() throws ClassNotFoundException, SQLException{
+    public Connection makeConnection() throws ClassNotFoundException, SQLException{
         Connection c = DriverManager.getConnection(URL, USERNAME, PASSWORD);
         return c;
     }

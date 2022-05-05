@@ -3,14 +3,13 @@ package main.springbook.user.dao;
 import java.sql.*;
 import main.springbook.user.domain.User;
 
-import static main.springbook.user.dao.SimpleConnectionMaker.*;
 
 public class UserDao {
 
-    private SimpleConnectionMaker simpleConnectionMaker;
+    ConnectionMaker connectionMaker = new DUserDao();
     public void add(User user) throws ClassNotFoundException, SQLException {
         //관심사 1. DB연결
-        Connection c = simpleConnectionMaker.getConnection();
+        Connection c = connectionMaker.makeConnection();
 
         //관심사 2. SQL 쿼리문 작성
         PreparedStatement ps = c.prepareStatement(
@@ -30,7 +29,7 @@ public class UserDao {
 
 
     public User get(String id) throws ClassNotFoundException, SQLException {
-        Connection c = simpleConnectionMaker.getConnection();
+        Connection c = connectionMaker.makeConnection();
         PreparedStatement ps = c
                 .prepareStatement("select * from users where id = ?");
         ps.setString(1, id);
